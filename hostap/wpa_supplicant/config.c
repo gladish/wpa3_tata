@@ -1002,6 +1002,18 @@ static char * wpa_config_write_key_mgmt(const struct parse_data *data,
 	}
 #endif /* CONFIG_SUITEB192 */
 
+#ifdef CONFIG_DPP
+	if (ssid->key_mgmt & WPA_KEY_MGMT_DPP) {
+		ret = os_snprintf(pos, end - pos, "%sDPP",
+				  pos == buf ? "" : " ");
+		if (os_snprintf_error(end - pos, ret)) {
+			end[-1] = '\0';
+			return buf;
+		}
+		pos += ret;
+	}
+#endif /*CONFIG_DPP */
+
 #ifdef CONFIG_FILS
 	if (ssid->key_mgmt & WPA_KEY_MGMT_FILS_SHA256) {
 		ret = os_snprintf(pos, end - pos, "%sFILS-SHA256",
