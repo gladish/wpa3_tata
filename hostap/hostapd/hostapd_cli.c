@@ -1445,7 +1445,7 @@ static int hostapd_cli_cmd_dpp_configurator_get_key(struct wpa_ctrl *ctrl,
 static int hostapd_cli_cmd_dpp_configurator_sign(struct wpa_ctrl *ctrl,
 		                                  int argc, char *argv[])
 {
-	        return hostapd_cli_cmd(ctrl, "DPP_CONFIGURATOR_SIGN", 1, argc, argv);
+	return hostapd_cli_cmd(ctrl, "DPP_CONFIGURATOR_SIGN", 1, argc, argv);
 }
 
 static int hostapd_cli_cmd_dpp_pkex_add(struct wpa_ctrl *ctrl, int argc,
