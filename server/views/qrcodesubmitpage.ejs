@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>QR code submit page</title>
+</head>
+<link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+<script type="text/javascript" src="/javascript/bootstrap.min.js"></script>
+<script type="text/javascript">
+	function passwordCheck() {
+    if (document.getElementById('wpapsk').checked) {
+        document.getElementById('passwordField').style.visibility = 'visible';
+    }
+    else if (document.getElementById('wpasae').checked) {
+        document.getElementById('passwordField').style.visibility = 'visible';
+    }
+    else {
+    	document.getElementById('passwordField').style.visibility = 'hidden';
+    	document.getElementById('password').value=""
+    }
+}
+</script>
+<body>
+<div class="row">
+        <div class="col-md-4  col-sm-offset-2 col-md-6 col-md-offset-4">
+<form action="/processqrcode" target="_blank" method="POST">
+	<div class="form-group">
+		<label class="control-label " >QR CODE</label>
+		<textarea class="form-control" name="qrcodetext" rows="2"></textarea>
+	</div>
+	<div class="form-group"> <!-- Radio group !-->
+		<label class="control-label">What DPP security method to use?</label>
+		<div class="radio">
+		  <label>
+			<input type="radio" name="dppsecurity" value="dppconnector" onclick="javascript:passwordCheck();" checked="checked"  >
+			DPP Connector
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+			<input type="radio" id="wpapsk"  name="dppsecurity" onclick="javascript:passwordCheck();"  value="wpapsk">
+			WPA-PSK
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+			<input type="radio" id="wpasae" name="dppsecurity" onclick="javascript:passwordCheck();" value="wpasae">
+			WPA-SAE
+		  </label>
+		</div>
+	</div>
+	<div id="passwordField" style="visibility:hidden">
+        Enter password <input type='text' id='password' name='password'><br>
+        </div>
+
+	<div class="form-group"> <!-- Submit button !-->
+		<button class="btn btn-primary " name="submit" type="submit">Submit</button>
+	</div>
+</form>
+</div>
+</div>
+</body>
+</html>
