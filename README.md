@@ -73,7 +73,7 @@ Run the below command using the hostapd_dpp.conf file along with path of hostapd
 ```
 example
 ```
-    ./get_config.sh ~/wpa3_tata/configfiles/hostap_dpp.conf /home/wpa3/wpa3_tata/hostap
+    ./get_config.sh ~/wpa3_tata/configfiles/hostap_dpp.conf ~/wpa3_tata/hostap
 ```
 On running the above command the following are observed.
 
@@ -82,7 +82,7 @@ On running the above command the following are observed.
 3. AP configures itself with dpp_connector, dpp_csign and dpp_netaccesskey, and these values are persisted even when AP is restarted.
 4. Security method (DPP Connector, WPA-PSK and WPA-SAE ) for connection establishment is choosen via server.
 
-Scan the qrcode of client device via mobile app and provide it in the qrcode-submit web page (http://<ip>:3000). On clicking 'submit' button in the web page, AP authenticates and provisions client with dpp_connector, dpp_csign, dpp_netaccesskey and connection is established on the fly between AP-STA.
+
      
 # Build configuration of STA
 
@@ -123,7 +123,7 @@ Run the below command in client machine.
 ```
 example
 ```
-    ./get_qr.sh /home/wpa3/wpa3_tata/hostap/wpa_supplicant/  ~/wpa3_tata/configfiles/wpa_supplicant_dpp.conf 
+    ./get_qr.sh ~/wpa3_tata/hostap/wpa_supplicant/  ~/wpa3_tata/configfiles/wpa_supplicant_dpp.conf 
 ```
 On running the above command the following are observed.
 
@@ -133,5 +133,6 @@ On running the above command the following are observed.
 4.  wpa_supplicant starts listen mode, by listening to 2412 frequency.
 5.  On receving authentication request from configurator, client gets provisioned by configurator and get connected to the network on the fly and the provisioned values are persisted in *wpa_supplicant_dpp.conf* even when STA is restarted.
 
+Scan the qrcode of client device via mobile app and provide it in the qrcode-submit web page (http://*ip of AP*:3000). The static IP address we have assigned above is *192.168.8.1*. On clicking 'submit' button in the web page, AP authenticates and provisions client with dpp_connector, dpp_csign, dpp_netaccesskey and connection is established on the fly between AP-STA.
 
 
