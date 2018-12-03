@@ -3,7 +3,7 @@
 #Usage
 #This script will generate a unique QR code and display qr code and make client to listen to DPP, save the configuration information to conf fileon connection establishment.
 #To generate a QR-Code of  STA-client and make it into listen mode run the following command line arguments
-# ./get_qr.sh <path/of/supplicant/> <path to supplicant config file/>
+# ./get_qr.sh <path to supplicant config file/> <path/of/wpa_supplicant/>
 
 
 #killing
@@ -12,7 +12,8 @@ sudo airmon-ng check kill
 sudo rm -rf /var/run/wpa_supplicant
 sleep 3
 
-WPA_BASEDIR=$1
+TOPDIR=$2
+WPA_BASEDIR=${TOPDIR}/wpa_supplicant/
 KEYOFCLIENTDEVICE=30770201010420b44caad64bdcac9d824ab00147d5ae813817eb4ac3b7a623ac28c4dffe080c6ea00a06082a8648ce3d030107a144034200042926c15b1ed896b04d51edfcbbbb4adff8cebbf331d4a823732788b17e3279c80c1927074b77b4f37ad7914ee61fd8aa9bb7eb3418ed886c2012136d1b0da000
 
 #getting interface name and mac address
@@ -42,9 +43,9 @@ if [ -z "$INTERFACE" ];then
 fi
 MACADDRESS=`cat /sys/class/net/$INTERFACE/address`
 
-echo $MACADDRESS
+
 #Running wpa_supplicant
-sudo $WPA_BASEDIR/wpa_supplicant -Dnl80211 -i$INTERFACE -c $2 &
+sudo $WPA_BASEDIR/wpa_supplicant -Dnl80211 -i$INTERFACE -c $1 &
 sleep 3
 
 # Generating a unique QR code
@@ -75,6 +76,7 @@ do
 		GETTINGID=$(echo $GETTINGID | cut -f 1 -d " ")
 		echo "The network ID is $GETTINGID"
 		sudo $WPA_BASEDIR/wpa_cli save_config $GETTINGID
+		sudo dhclient $INTERFACE
 		break
 	fi
 	sleep 2;
