@@ -1,145 +1,170 @@
-# Setup Manual for Wifi-Onboarding WPA3-DPP(using scripts)
+# Setup Manual for Wi-Fi Onboarding WPA3-DPP (using scripts)
 
 
-# System requirements
-1. Two test PC's with Ubuntu 17.10 installed, one acting as a Access Point(AP) and another as Client.
-2. Two ALPHA AWUS036NHA wi-fi dongles, one configured as AP and another as client.
+### 1. System requirements
 
-# Build configuration of AP
+1.1  Two test PC's with Ubuntu 17.10 installed, one acting as a Access Point(AP)and another as Client.
 
-### 1. Build Steps
+1.2  Two ALFA AWUS036NHA Wi-Fi dongles, one configured as AP and another as client.
 
-1. Install all dependencies for enabling hostapd in AP machine.
+1.3  Android mobile phone with QR code scanning application
 
-```
-    gcc, make, build-essentials,libnl-3-dev,libnl-genl-3-dev,pkg-config,libssl-dev
-```
-2. Checkout the code from link given below.
+### 2. Setup AP
+
+2.1 Checkout the code from link given below to AP dongle connected PC/PI.
 
 ```
      git clone -b DPP_Demo https://github.com/gladish/wpa3_tata.git .
 ```
 
-3. Build procedure
+2.2 Run the below scripts to install all the dependencies and setup server (This is a one time activity).
+
 ```
-     cd hostap/hostapd
-     sudo make
- ```
-4. Config files
-
-    The config file for hostapd is present in the *configfile* folder. ie, hostap_dpp.conf
-
-5. Static IP and DHCP Server.
-
-    This step is not required for a successful 4-way handshake. However this static ip is required for accessing the server running in the AP
-    for submitting scanned QR code and to upload the DPP keys data after AP self configuration
-    It will be used to assign a static IP for AP. AP will also have a DHCP server to provide IP to any client being associated with it.
-    Add the following to /etc/network/interfaces to have static IP.
+    ./InstallScriptForAp.sh
 ```
-     auto <wifi-interface>
-     iface <wif-interface> inet static
+
+2.3 Static IP and DHCP Server.
+
+The static ip is required for accessing the express node server running in the AP.
+It will be used to assign a static IP for AP. AP will also have a DHCP server to provide IP to any client being associated with it.
+Add the following to /etc/network/interfaces to have static IP.
+
+``` 
+     auto <Wi-Fi-interface>
+     iface <Wi-Fi-interface> inet static
      address 192.168.8.1
      netmask 255.255.255.0
 ```
+
 This will provide static IP 192.168.8.1 for the interface. Install  *dnsmasq* in AP so it can act as DHCP server. Edit /etc/dnsmasq.conf
 
 ```
-    interface=lo, <wifi-interface>
+    interface=lo, <Wi-Fi-interface>
     no-dhcp-interface=lo
     dhcp-range=192.168.8.20,192.168.8.254,255.255.255.0,12h
 ```
 Restart the network services
+
 ```
     sudo service networking restart
     sudo service network-manager restart
 ```
-6. Passwordless sudo
 
-    For running the hostapd cli activities, sudo permission is required. Setup a password less sudo account to perform those. Otherwise user  will be prompted to enter password in server console.
+2.4 Passwordless sudo
 
-    Reference:
-How to setup passowrd less sudo (https://serverfault.com/questions/160581/how-to-setup-passwordless-sudo-on-linux)
+For running the hostapd cli activities, sudo permission is required. Setup a password less sudo account to perform those. Otherwise user  will beprompted to enter password in server console.
 
-*Note: Enable ip forwarding and firewall rules if internet access is required for STA. This is an optional step*
+Reference: How to setup passowrd less sudo (https://serverfault.com/questions/160581/how-to-setup-passwordless-sudo-on-linux)
 
-### 2. Server setup
+2.5 Building hostapd
 
-Run the below scripts to install all server dependencies and setup server (This is a one time activity)
 ```
-./InstallScriptForAp.sh
-```
-### 3. Configuring AP as configurator and connecting to client
+     cd hostap/hostapd
+     sudo make
 
-Run the below command using the hostapd_dpp.conf file along with path of hostapd .
-```
-./APsidescripts/get_config.sh <path/to/hostapd.conf> <path/of/root/hostap/>
-```
-example
-```
-    ./APsidescripts/get_config.sh ~/wpa3_tata/configfiles/hostap_dpp.conf ~/wpa3_tata/hostap
-```
-On running the above command the following are observed.
+ ```
 
-1. Server and hostapd are up and running.
-2. A numbered list of available interfaces is displayed on the console, Select the hostapd interface from list by typing the corresponding number.
-3. AP configures itself with dpp_connector, dpp_csign and dpp_netaccesskey, and these values are persisted even when AP is restarted.
-4. Security method (DPP Connector, WPA-PSK and WPA-SAE ) for connection establishment is chosen via server.
-5. The configured parameters are uploaded to the server. 
+### 3. Setup STA
 
-
-
-# Build configuration of STA
-
-### 1. Build Steps
-
-1. Install all dependencies for enabling hostapd.
-```
-    gcc, make, build-essentials,libnl-3-dev,libnl-genl-3-dev,pkg-config,libssl-dev
-```
-2. Checkout the code from link given below.
+3.1 Checkout the code from link given below to client dongle connected PC/PI.
 
 ```
     git clone -b DPP_Demo https://github.com/gladish/wpa3_tata.git .
 ```
 
-3. Build procedure
+3.2 Run the below script to install all dependencies(This is a one-time activity)
+
+```
+./InstallScriptForClient.sh
+
+```
+
+ 3.3 Building wpa_supplicant
+
 ```
      cd hostap/wpa_supplicant
      sudo make
- ```
-4. Config files
-
-    The config file for supplicant is present in the  *configfile* folder. ie, wpa_supplicant_dpp.conf
-
-5. Qr-Code dependencies setup
-
-    Run the below script to setup qrcode dependencies(This is a one-time activity)
-```
-./InstallScriptForClient.sh
 ```
 
-### 2. Configuring STA and getting connected (via scripts)
+### 4.Runing AP
 
-Run the below command in client machine.
+4.1 Location of config files
+
+The config file for hostapd is present in the *configfile* folder.(hostapd_dpp.conf)
+
+4.2 Run the below command using the hostapd_dpp.conf file along with path of hostapd.
 
 ```
-    ./clientsidescripts/get_qr.sh <path/to/wpa_supplicant_dpp.conf> <path/of/root/hostap/>
+    ./APsidescripts/get_config.sh <path/to/hostapd_dpp.conf> <path/of/hostap/>
+
 ```
+
 example
+
+```
+    ./APsidescripts/get_config.sh ~/wpa3_tata/configfiles/hostapd_dpp.conf ~/wpa3_tata/hostap/ 
+
+```
+On running the above command the following actions will be taking place.
+
+a. Express node server is enabled and is ready to accept configured keys. 
+
+b. Hostapd is up and running.
+
+c. A numbered list of available interfaces is displayed on the console, select the hostapd interface from list by typing the corresponding number.
+
+d. AP configures itself with dpp_connector, dpp_csign and dpp_netaccesskey and these values are persisted in *hostapd_dpp.conf* file .
+
+e. Any AP can upload the configuration to this express node server once AP is self configurated. Uploaded configuration parameters can be accessed using
+*http://<ip of express node server>:3000/getallconfig*
+
+
+### 5.Running STA
+
+5.1 Location of config files
+
+  The config file for wpa_supplicant is present in the  *configfile* folder.(wpa_supplicant_dpp.conf)
+
+5.2 Run the below command in client machine.
+
+```
+    ./clientsidescripts/get_qr.sh <path/to/wpa_supplicant_dpp.conf> <path/of/hostap/>
+```
+
+example
+
 ```
     ./clientsidescripts/get_qr.sh ~/wpa3_tata/configfiles/wpa_supplicant_dpp.conf ~/wpa3_tata/hostap/
 ```
-On running the above command the following are observed.
 
-1. wpa_supplicant is up and running.
-2. A numbered list of available interfaces is displayed on the console, Select the     wpa_supplicant interface from list by typing the corresponding number.
-3.  Qrcode corresponding to the device is generated.
-4.  wpa_supplicant starts listen mode, by listening to 2412 frequency.
-5.  On receiving authentication request from configurator, client gets provisioned by configurator and get connected to the network on the fly and the provisioned values are persisted in *wpa_supplicant_dpp.conf* even when STA is restarted.
+On running the above command the following actions will be taking place.
 
-Scan the qrcode of client device via mobile app and provide it in the qrcode-submit web page (http://*ip of AP*:3000). The static IP address we have assigned above is *192.168.8.1*. On clicking 'submit' button in the web page, AP authenticates and provisions client with dpp_connector, dpp_csign, dpp_netaccesskey and connection is established on the fly between AP-STA.
+a. wpa_supplicant is up and running.
+
+b. A numbered list of available interfaces is displayed on the console, select the wpa_supplicant interface from list by typing the corresponding number.
+
+c. Qrcode corresponding to the device is generated. 
+
+d. wpa_supplicant starts listen mode, by listening to 2412 frequency.
+
+
+### 6. Connection Establishment
+
+6.1 Connect the mobile phone to AP using WPA-PSK
+
+6.2 Open the web page (http://*ip of AP*:3000) using browser in the mobile
+
+6.3 Using QR code scanning application, scan the qrcode of the client device.
+
+6.4 Submit the QR code to web page (http://*ip of AP*:3000). Please note that the static IP address assigned for AP is *192.168.8.1*.
+
+6.5 Select a security method (DPP Connector, WPA-PSK and WPA-SAE ) from the list as shown in the webpage.
+
+6.6 Click the 'submit' button in the web page, AP sends authentication request to client.
+
+6.7 Once authentication is completed, client gets provisioned by configurator and get connected to the AP-network on the fly and the provisioned values are persisted in *wpa_supplicant_dpp.conf*.
 
 ### Verifying the connection
 The successful 4-way handshake results in connection between AP and STA device. 
-Now the AP and STA formed a LAN connection. 
+Now the AP and STA will be in a LAN connection with STA getting IP-address of 192.168.8.* (depending on IP range provideed in section 2.3). AP and STA should be able to ping each other now.
 
