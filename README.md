@@ -5,7 +5,7 @@ DPP, SAE, OWE enabled for hostapd and supplicant. The readme focuses on **Device
 # Setting up the code
 
 ### Set up Environment.
-Connect 2 Alfa AWUS036NHA devices in two PC. One will act as AP and other as STA. 
+Connect 2 Alfa AWUS036NHA devices in two PC. One will act as AP and other as STA. This device was selected by trial and error. We searched randomly until we found a WiFi adapter that supported 80211w.
 
 ### Dependencies for enabling hostapd and wpa-supplicant.
 
