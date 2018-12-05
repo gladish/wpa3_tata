@@ -3,7 +3,7 @@ var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var fs = require('fs');
 var url = "mongodb://localhost:27017/";
-var args = process.argv.slice(2);  // Geting command line arguments in array.
+var args = process.argv.slice(2); // Geting command line arguments in array.
 var rootpathofhostadpd = args[0] // Mention the root path where supplicant and hostapd present
 
 /* GET home page. */
@@ -18,11 +18,10 @@ router.post('/processqrcode', function(req, res) {
     console.log(req.body.dppsecurity);
     console.log(req.body.password);
     if (!req.body.qrcodetext || !req.body.dppsecurity) {
-        return res.status(400).end();
+    	return res.status(400).end();
     }
-
     const ourexec = require('child_process').exec;
-    ourexec("scripts/qr_monitor.sh " + "\"" + req.body.qrcodetext + "\"" + " " + rootpathofhostadpd  + " " + req.body.dppsecurity + " " + req.body.password, (error, stdout, stderr) => {
+    ourexec("scripts/qr_monitor.sh " + "\"" + req.body.qrcodetext + "\"" + " " + rootpathofhostadpd + " " + req.body.dppsecurity + " " + req.body.password, (error, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         console.log(error);

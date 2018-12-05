@@ -10,7 +10,7 @@ if [ $# -ne 2 ]; then
 fi
 
 echo "Killing key collection server, hostapd process if any running..."
-#Kill existing process.
+#Kill existing process. 
 sudo pkill node
 sudo pkill npm
 sudo pkill hostapd
@@ -47,7 +47,7 @@ fi
 MACADDRESS=`cat /sys/class/net/$INTERFACE/address`
 
 #Run server
-cd ../server; npm start $TOPDIR  &
+cd $2/../server; npm start $TOPDIR  &
 cd -
 
 echo "Started express node server at $UPLOAD_LOCATION to collect keys from AP"
@@ -94,7 +94,7 @@ if [ $CHECKDPPVALUES -eq 0 ]; then
 
 	echo "Self configuration of AP..."
 	sudo $HOSTAPD_FOLDER/hostapd_cli dpp_configurator_sign " configurator=1 conf=ap-dpp"
-
+	
 	#Wait for some time to complete the configuration process
 	DPP_GREP_RESULT=$(grep -o "DPP-CONNECTOR.*"  $DPP_LOGFILE)
 	while [ "$DPP_GREP_RESULT" = "" ]
