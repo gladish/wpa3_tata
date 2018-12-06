@@ -9,7 +9,7 @@ Connect 2 Alfa AWUS036NHA devices in two PC. One will act as AP and other as STA
 
 ### Dependencies for enabling hostapd and wpa-supplicant.
 
-```gcc, make, build-essentials,libnl-3-dev,libnl-genl-3-dev,pkg-config,libssl-dev```
+```gcc, make, build-essential,libnl-3-dev,libnl-genl-3-dev,pkg-config,libssl-dev```
 
 ### Checkout the code.
 ``` git clone -b WPA3_Enabled_Hostapd https://github.com/gladish/wpa3_tata.git ```
